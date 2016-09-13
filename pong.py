@@ -21,6 +21,8 @@ pygame.display.set_caption("PONG!")
 FOREGROUNDCOLOR=(255,255,255)
 BACKGROUNDCOLOR=(0,0,0)
 
+DIFFICOLTA = 0.3
+
 # settings of the ball
 rb = 7 # radious
 
@@ -46,7 +48,7 @@ def dotted_vertical_line(x):
 	for y in range(0,600,20):
 		pygame.draw.line(screen, FOREGROUNDCOLOR, (x,y), (x,y+10), 1)
 
-def game():
+def game(nplayers):
 	ball = Ball()
 	isPressingUp1 = False
 	isPressingUp2 = False
@@ -89,16 +91,21 @@ def game():
 		# get delta time
 		dt = fpsClock.get_time()/20.0
 		
-		
 		# update game state
 		if isPressingUp1 and y1 >= l/2:
 			y1 -= d*dt
 		if isPressingDown1 and y1 <= 600-l/2:
 			y1 += d*dt
-		if isPressingUp2 and y2 >= l/2:
-			y2 -= d*dt
-		if isPressingDown2 and y2 <= 600-l/2:
-			y2 += d*dt
+		if nplayers == 2:
+			if isPressingUp2 and y2 >= l/2:
+				y2 -= d*dt
+			if isPressingDown2 and y2 <= 600-l/2:
+				y2 += d*dt
+		elif nplayers == 1:
+			if ball.y-y2>10:
+				y2 += d*dt*DIFFICOLTA
+			elif y2-ball.y>10:
+				y2 -= d*dt*DIFFICOLTA
 		
 		# rimbalzi
 		if ball.y <= 0+rb or ball.y >= 600-rb: # rimbalzo parete
@@ -120,7 +127,7 @@ def game():
 		# velocita	
 		ball.x += ball.vx*dt
 		ball.y += ball.vy*dt
-		print dt
+		
 		# accelerazione
 		ball.vx*=1 +0.001*dt
 		ball.vy*=1 +0.001*dt
@@ -170,8 +177,8 @@ def game():
 def main():
 	screen = pygame.display.set_mode((800, 600))
 	menu = cMenu(50, 50, 20, 5, 'vertical', 100, screen,
-				[('Start Game', 1, None),
-				('Load Game',  2, None),
+				[('Singleplayer', 1, None),
+				('Multiplayer',  2, None),
 				('Options',    3, None),
 				('Exit',       4, None)])
 
@@ -203,10 +210,10 @@ def main():
 			if state == 0:
 				rect_list, state = menu.update(e, state)
 			elif state == 1:
-				game()
+				game(1)
 				state = 0
 			elif state == 2:
-				#multiplayer
+				game(2)
 				state = 0
 			elif state == 3:
 				#TODO options
