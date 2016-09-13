@@ -16,7 +16,8 @@ pygame.mixer.music.play(-1,0)
 myfont = pygame.font.SysFont("monospace bold", 25)
 pygame.display.set_caption("PONG!")
 
-WHITE=(255,255,255)
+FOREGROUNDCOLOR=(255,255,255)
+BACKGROUNDCOLOR=(0,0,0)
 
 y1 = y2 = 300
 x1 = 750
@@ -54,7 +55,7 @@ def respawn():
 
 def dotted_vertical_line(x):
 	for y in range(0,600,20):
-		pygame.draw.line(screen, WHITE, (x,y), (x,y+10), 1)
+		pygame.draw.line(screen, FOREGROUNDCOLOR, (x,y), (x,y+10), 1)
 
 while True:
 	# handle events
@@ -121,16 +122,16 @@ while True:
 	if hue2<0:
 		hue2+=1
 	r,g,b=tuple(hsv_to_rgb(hue,1,1))
-	global WHITE
-	wr,wg,wb=tuple(hsv_to_rgb(hue2,0.5,1))
-	WHITE=(wr*255,wg*255,wb*255)
-	screen.fill((0,0,0))#(r*255,g*255,b*255))
+	wr,wg,wb=tuple(hsv_to_rgb(hue2,0.7,1))
+	FOREGROUNDCOLOR=(wr*255,wg*255,wb*255)
+	#BACKGROUNDCOLOR=(r*255,g*255,b*255)
+	screen.fill(BACKGROUNDCOLOR)
 	# render text
-	scorelabel = myfont.render("G1: "+str(p1)+"      G2: "+str(p2), 1, WHITE)
+	scorelabel = myfont.render("G1: "+str(p1)+"      G2: "+str(p2), 1, FOREGROUNDCOLOR)
 	screen.blit(scorelabel, (340, 50))
-	pygame.draw.rect(screen, WHITE, (x1,y1-l/2,6,l), 1)
-	pygame.draw.rect(screen, WHITE, (x2,y2-l/2,6,l), 1)
-	pygame.draw.circle(screen, WHITE, (int(xb),int(yb)), rb)
+	pygame.draw.rect(screen, FOREGROUNDCOLOR, (x1,y1-l/2,6,l), 1)
+	pygame.draw.rect(screen, FOREGROUNDCOLOR, (x2,y2-l/2,6,l), 1)
+	pygame.draw.circle(screen, FOREGROUNDCOLOR, (int(xb),int(yb)), rb)
 	dotted_vertical_line(400)
 	dotted_vertical_line(25)
 	dotted_vertical_line(775)
